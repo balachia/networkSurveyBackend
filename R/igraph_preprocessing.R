@@ -68,13 +68,15 @@ build_edge_network <- function(g) {
     E(ge)$id <- 1:length(E(ge))
     # 4) create selector edge attributes
     # advice network
-    E(ge)$advice.directed <- E(ge)$directed & E(ge)$advice
-    E(ge)$advice.any      <- (!E(ge)$directed) & (E(ge)$advice > 0)
-    E(ge)$advice.mutual   <- (!E(ge)$directed) & (E(ge)$advice == 2)
+    E(ge)$advice.directed <- E(ge)$directed * E(ge)$advice
+    #E(ge)$advice.any      <- (!E(ge)$directed) * (E(ge)$advice > 0)
+    E(ge)$advice.any      <- (!E(ge)$directed) * E(ge)$advice
+    E(ge)$advice.mutual   <- (!E(ge)$directed) * (E(ge)$advice == 2)
     # support network
-    E(ge)$support.directed <- E(ge)$directed & E(ge)$support
-    E(ge)$support.any      <- (!E(ge)$directed) & (E(ge)$support > 0)
-    E(ge)$support.mutual   <- (!E(ge)$directed) & (E(ge)$support == 2)
+    E(ge)$support.directed <- E(ge)$directed * E(ge)$support
+    #E(ge)$support.any      <- (!E(ge)$directed) * (E(ge)$support > 0)
+    E(ge)$support.any      <- (!E(ge)$directed) * E(ge)$support
+    E(ge)$support.mutual   <- (!E(ge)$directed) * (E(ge)$support == 2)
     # done
     ge
 }

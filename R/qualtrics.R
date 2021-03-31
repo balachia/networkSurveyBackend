@@ -66,6 +66,7 @@ qualtrics_to_igraph <- function(df.qualtrics,
         select(ego, alter, advice, support) %>%
         igraph::graph_from_data_frame(directed = TRUE, vertices = df.nodes)
     #E(ntwk)$width <- 1
+    ntwk <- igraph::set_edge_attr(ntwk, "width", value = 1)
     ntwk
 }
 
