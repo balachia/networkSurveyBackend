@@ -29,7 +29,7 @@ load_qualtrics_file <- function(file_qualtrics) {
 #' @export
 qualtrics_to_igraph <- function(df.qualtrics,
                                 qidNetwork = 'network', qidSudo = 'pseudonym', qidConsent = 'consent',
-                                ansAdvice = 'advice', ansSupport = 'support', ansConsent = 'I agree') {
+                                ansAdvice = 'Advice', ansSupport = 'Support', ansConsent = 'I agree') {
     df.qualtrics <- df.qualtrics %>% mutate(ego = NodeID)
     # TODO: keep only valid rows (i.e. actual responses, not tests or previews)
     # extract and longen network data
