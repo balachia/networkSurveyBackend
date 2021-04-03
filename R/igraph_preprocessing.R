@@ -37,12 +37,22 @@ add_centralities <- function(g, g0) {
     # TODO: add `constraint` (Burt's constraint)?
     V(g)$centrality.outdegree <- igraph::degree(g0, mode = 'out')
     V(g)$centrality.indegree <- igraph::degree(g0, mode = 'in')
+    # modified closeness centrality
     suppressWarnings({
         V(g)$centrality.close <- igraph::closeness(g0, mode = 'in')
     })
     V(g)$centrality.between <- igraph::betweenness(g0)
     V(g)$centrality.eigen <- igraph::eigen_centrality(g0, directed = TRUE)$vector
     V(g)$centrality.cluster <- igraph::transitivity(g0, type = 'barrat', isolates = 'zero')
+    # adjust 'isolates'
+    isolates <- V(g)$centrality.indegree == 0
+    range.connected.close <- range(V(g)$centrality.close[!isolates])
+    gap.cc <- range.connected.close[2] - range.connected.close[1]
+    V(g)$centrality.close[isolates] <- range.connected.close[1] - 0.5 * gap.cc
+    # adjust 'nonrespondents'
+    nonrespondents <- V(g)$centrality.outdegree == 0
+    V(g)$centrality.close[nonrespondents] <- NA
+    #return
     g
 }
 
