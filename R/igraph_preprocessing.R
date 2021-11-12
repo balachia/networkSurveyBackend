@@ -44,6 +44,34 @@ add_centralities <- function(g, g0) {
     V(g)$centrality.between <- igraph::betweenness(g0)
     V(g)$centrality.eigen <- igraph::eigen_centrality(g0, directed = TRUE)$vector
     V(g)$centrality.cluster <- igraph::transitivity(g0, type = 'barrat', isolates = 'zero')
+    # hierarchical community detection
+    # collapse to undirected
+    g0.undirected <- igraph::as.undirected(g0, 'collapse')
+    #communities <- igraph::cluster_edge_betweenness(g0.undirected)
+    communities <- igraph::cluster_fast_greedy(g0.undirected)
+    # build up colors from most-merged
+    parent <- igraph::cut_at(communities, 1)
+    g <- igraph::set_vertex_attr(g,
+                                 name = paste0('community.', 1),
+                                 value = parent)
+    for(no in 2:min(10, length(V(g0)) - 1)) {
+        child <- igraph::cut_at(communities, no)
+        # find splitted color
+        split.color <- which(sapply(1:(no-1),
+                                    function(x) length(unique(child[parent == x]))) > 1)
+        stopifnot(length(split.color) == 1)
+        # find splitted units (recolor the smaller of the split groups)
+        newcols <- unique(child[parent == split.color])
+        n.c1 <- sum(child == newcols[1])
+        n.c2 <- sum(child == newcols[2])
+        newcol <- if(n.c1 >= n.c2) newcols[2] else newcols[1]
+        #split.lgl <- child == splitted.col
+        # reproduce split in the parent
+        parent[child == newcol] <- no
+        g <- igraph::set_vertex_attr(g,
+                                     name = paste0('community.', no),
+                                     value = parent)
+    }
     # adjust 'isolates'
     isolates <- V(g)$centrality.indegree == 0
     range.connected.close <- range(V(g)$centrality.close[!isolates])
