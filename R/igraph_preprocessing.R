@@ -100,6 +100,7 @@ add_centralities <- function(g, g0) {
     })
     V(g)$centrality.between <- igraph::betweenness(g0)
     V(g)$centrality.eigen <- igraph::eigen_centrality(g0, directed = TRUE)$vector
+    # TODO: this transitivity measure needs to change to an undirected network
     V(g)$centrality.cluster <- igraph::transitivity(g0, type = 'barrat', isolates = 'zero')
     # hierarchical community detection
     # collapse to undirected
