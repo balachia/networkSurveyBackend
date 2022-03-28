@@ -9,8 +9,8 @@ qualtrics_to_igraph(
   qidNetwork = "network",
   qidSudo = "pseudonym",
   qidConsent = "consent",
-  ansAdvice = "advice",
-  ansSupport = "support",
+  ansAdvice = "Advice",
+  ansSupport = "Support",
   ansConsent = "I agree"
 )
 }
