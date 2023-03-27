@@ -95,6 +95,7 @@ add_centralities <- function(g, g0) {
     V(g)$centrality.outdegree <- igraph::degree(g0, mode = 'out')
     V(g)$centrality.indegree <- igraph::degree(g0, mode = 'in')
     # modified closeness centrality
+    # TODO: this version of closeness centrality is undefined if you send no outbound ties
     suppressWarnings({
         V(g)$centrality.close <- igraph::closeness(g0, mode = 'in')
     })
